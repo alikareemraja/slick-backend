@@ -1,12 +1,34 @@
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const PORT = 4000;
+"use strict";
 
-app.use(cors());
-app.use(bodyParser.json());
+const http       = require('http');
+const mongoose   = require('mongoose');
 
-app.listen(PORT, function() {
-    console.log("Server is running on Port: " + PORT);
+const api        = require('./src/api');
+const config     = require('./src/config');
+
+
+// Set the port to the API.
+api.set('port', config.port);
+
+//Create a http server based on Express
+const server = http.createServer(api);
+
+
+//Connect to the MongoDB database; then start the server
+mongoose
+    .connect(config.mongoURI, {useNewUrlParser: true, useCreateIndex: true,})
+    .then(() => server.listen(config.port))
+    .catch(err => {
+        console.log('Error connecting to the database', err.message);
+        process.exit(err.statusCode);
+    });
+
+
+server.on('listening', () => {
+    console.log(`API is running in port ${config.port}`);
+});
+
+server.on('error', (err) => {
+    console.log('Error in the server', err.message);
+    process.exit(err.statusCode);
 });
