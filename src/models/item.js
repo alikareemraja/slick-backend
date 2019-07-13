@@ -15,4 +15,4 @@ const itemSchema = new mongoose.Schema({
     reviews: [{ reviewerId: Number, reviewTitle: String, reviewText: String, avgRating: Number, numRatings: Number }]
 });
 
-module.exports = mongoose.model('item', itemSchema);
+module.exports = mongoose.model('Item', itemSchema);
