@@ -2,6 +2,7 @@
 "use strict";
 
 const CommentModel = require("../models/comment");
+const mongoose = require('mongoose');
 
 const addCommentOnItem = (req, res) => {
 
@@ -47,33 +48,33 @@ const replyToComment = (req, res) => {
 
 const getComment = (req, res) => {
 
-    CommentModel.aggregate([
-        {
-            $graphLookup: {
-                from: "comments",
-                startWith: "$parent",
-                connectFromField: "parent",
-                connectToField: "_id",
-                as: "ancestors"
-            }
-        },
-        { $match: { "id": "5d2a1424d0fe46181324937d" } },
-        {
-            $addFields: {
-                ancestors: {
-                    $reverseArray: {
-                        $map: {
-                            input: "$ancestors",
-                            as: "t",
-                            in: { name: "$$t.name" }
-                        }
-                    }
-                }
-            }
-        }
-    ]).
-        then(res => { console.log(res) }).
-        catch(error => console.error('error', error));
+    var commentId = req.params["commentId"];
+
+    if (commentId === undefined)
+                    res.status(500).json({
+                    err: 'Internal server error',
+                    message: "No comment Id provided"
+                }); 
+
+    CommentModel.aggregate()
+    .match({ _id: mongoose.Types.ObjectId(commentId) })
+    .graphLookup({
+        from: 'comments', // Use the comment collection
+        startWith: '$children', // Start looking at the document's `children` property
+        connectFromField: 'children', // A link in the graph is represented by the children property...
+        connectToField: '_id', // ... pointing to another comments's _id property
+        //maxDepth: 1, // Only recurse one level deep
+        as: 'replies' // Store this in the `replies` property
+      }).exec()
+        .then(result => { res.status(200).json(result) })
+        .catch(err => res.status(500).json({
+            err: 'Internal server error',
+            message: err.message
+        }));
+}
+
+const parseCommentTree = (tree) => {
+
 }
 
 const editComment = (req, res) => {
