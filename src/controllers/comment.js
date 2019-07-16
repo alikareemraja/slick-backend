@@ -63,29 +63,105 @@ const getComment = (req, res) => {
         startWith: '$children', // Start looking at the document's `children` property
         connectFromField: 'children', // A link in the graph is represented by the children property...
         connectToField: '_id', // ... pointing to another comments's _id property
-        //maxDepth: 1, // Only recurse one level deep
+        maxDepth: 1, // Only recurse one level deep
         as: 'replies' // Store this in the `replies` property
       }).exec()
-        .then(result => { res.status(200).json(result) })
+        .then(result => { var thread = parseCommentTree(result[0]); res.status(200).json(thread) })
         .catch(err => res.status(500).json({
             err: 'Internal server error',
             message: err.message
         }));
 }
 
-const parseCommentTree = (tree) => {
+const parseCommentTree = (thread) => {
+
+    var commentTree = [];
+    commentTree.push({ "_id" : thread._id,
+                        "item": thread.item,
+                        "user": thread.user,
+                        "date": thread.date,
+                        "text": thread.text,
+    });
+    
+    addReplies(commentTree[0], thread.children, thread);
+
+    return commentTree;
 
 }
 
-const editComment = (req, res) => {
+const addReplies = (root, children, thread) => {
+
+    var index = 0;
+    var queue = [];
+    root.replies = [];
+    while(children.length > 0 ){
+        var comment = children.pop().toString();
+        
+        var reply = thread.replies.filter(obj => {
+            return obj._id.toString() === comment;
+          })[0];
+        
+        if (reply === undefined)
+          break;
+        root.replies.push(reply);
+        queue = reply.children;
+        addReplies(root.replies[index], queue, thread);
+        index++;
+    }
+
+}
+
+
+const updateComment = (req, res) => {
+
+    if (Object.keys(req.body).length === 0)
+    {
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body is empty'
+        });
+    }
+
+    var commentId = req.params["commentId"];
+
+    if (commentId === undefined)
+                    res.status(500).json({
+                    err: 'Internal server error',
+                    message: "No comment Id provided"
+    });
+
+    CommentModel.updateOne( {"_id": commentId }, { $set: { "text": req.body.text } },{
+        new: true,
+        runValidators: true}).exec()
+        .then(item => res.status(200).json(item))
+        .catch(error => res.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+        }));
 
 }
 
 const removeComment = (req, res) => {
 
+    var commentId = req.params["commentId"];
+
+    if (commentId === undefined)
+                    res.status(500).json({
+                    err: 'Internal server error',
+                    message: "No comment Id provided"
+    });
+
+    CommentModel.findByIdAndRemove(commentId).exec()
+        .then(() => res.status(200).json({message: `Comment was deleted`}))
+        .catch(error => res.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+        }));
 }
 
 module.exports = {
     addCommentOnItem,
-    getComment
+    getComment,
+    updateComment,
+    removeComment
 };
