@@ -49,8 +49,8 @@ const updateOwnedItem = (req, res) => {
             message: 'The request body is empty'
         });
     }
-
-    UserModel.updateOne( {"_id": req.params.uid, "ownedItems.id": req.params.itemid }, { $set: { "ownedItems.$": req.body } },{
+    
+    UserModel.updateOne( {"_id": req.params.uid, "ownedItems._id": req.params.itemId }, { $set: { "ownedItems.$": req.body } },{
         new: true,
         runValidators: true}).exec()
         .then(item => res.status(200).json(item))
