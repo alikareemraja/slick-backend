@@ -18,9 +18,9 @@ const login = (req,res) => {
         message: "The request body must contain a username property"
     });
 
-    UserModel.findOne({username: req.body.username}).exec()
+    UserModel.findOne({username: req.body.username}).select("username password").exec()
         .then(user => {
-
+            
             // check if the password is valid
             const isPasswordValid = bcrypt.compareSync(req.body.password, user.password);
             if (!isPasswordValid) return res.status(401).send({token: null });

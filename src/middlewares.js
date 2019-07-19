@@ -19,14 +19,13 @@ const allowCrossDomain = (req, res, next) => {
 };
 
 const checkAuthentication = (req, res, next) => {
-    // Just pass it to the next, until proper authetication/autherizatio is implemented
-    next()/*
+
     // check header or url parameters or post parameters for token
     let token = ""
     if(req.headers.authorization) {
         token = req.headers.authorization.substring(4);
     }
-
+    
     if (!token)
         return res.status(401).send({
             error: "Unauthorized",
@@ -45,7 +44,6 @@ const checkAuthentication = (req, res, next) => {
         next();
     });
 
-*/
 };
 
 const errorHandler = (err, req, res, next) => {
