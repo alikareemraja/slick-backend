@@ -22,6 +22,25 @@ const getOwnedItems = (req, res) => {
 
 };
 
+const getOwnedItem = (req, res) => {
+    UserModel.findOne({"_id": req.params.uid, "ownedItems._id": req.params.itemId }).select("ownedItems.$").exec()
+        .then(ownedItem => {
+
+            if (!ownedItem) return res.status(404).json({
+                error: "Not Found",
+                message: "Owned item not found"
+            });
+
+            res.status(200).json(ownedItem.ownedItems[0])
+
+        })
+        .catch(error => res.status(500).json({
+            error: "Internal Server Error",
+            message: error.message
+        }));
+
+};
+
 const addOwnedItem = (req, res) => {
     UserModel.findByIdAndUpdate( req.params.uid, { $push: {ownedItems: req.body } } )
     .then(item => res.status(200).json(item))
@@ -91,6 +110,7 @@ const deleteWishlistItem = (req, res) => {
 
 module.exports = {
     getOwnedItems,
+    getOwnedItem,
     addOwnedItem,
     deleteOwnedItem,
     getWishlistItems,
