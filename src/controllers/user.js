@@ -22,6 +22,8 @@ const getOwnedItems = (req, res) => {
 
 };
 
+
+
 const getOwnedItem = (req, res) => {
     UserModel.findOne({"_id": req.params.uid, "ownedItems._id": req.params.itemId }).select("ownedItems.$").exec()
         .then(ownedItem => {
