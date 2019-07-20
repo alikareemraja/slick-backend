@@ -6,7 +6,7 @@ const itemSchema = new mongoose.Schema({
   title: String,
   category: String,
   brand: String,
-  prices: [{ retailer: String, price: Number }],
+  //prices: [{ retailer: String, price: Number }],
   size: [String],
   color: [String],
   fabric: String,
@@ -14,7 +14,7 @@ const itemSchema = new mongoose.Schema({
   imageURL: String, // might require validation in db
   purchaseLink: String, // might require validation in db
   isRecommended: Boolean,
-  
+
   retailers : [
     {
         name : String,
