@@ -14,6 +14,15 @@ const itemSchema = new mongoose.Schema({
   imageURL: String, // might require validation in db
   purchaseLink: String, // might require validation in db
   isRecommended: Boolean,
+  
+  retailers : [
+    {
+        name : String,
+        website : String,
+        price: String,
+    },
+  ],
+
   reviews: [
     {
       reviewerId: Number,
