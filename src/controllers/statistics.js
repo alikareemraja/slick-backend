@@ -51,8 +51,28 @@ const create = (req, res) => {
     );
 };
 
+
+const remove = (req, res) => {
+  StatisticsModel.findByIdAndRemove(req.params.id)
+    .exec()
+    .then(() =>
+      res
+        .status(200)
+        .json({ message: `history with id${req.params.id} was deleted` })
+    )
+    .catch(error =>
+      res.status(500).json({
+        error: "Internal server error",
+        message: error.message
+      })
+    );
+};
+
+
+
 module.exports = {
   read,
   list,
-  create
+  create,
+  remove
 };
