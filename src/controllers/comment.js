@@ -126,7 +126,7 @@ const addReplies = (root, children, thread) => {
         })[0];
 
         if (reply === undefined)
-            break;
+            continue;
         root.replies.push(reply);
         queue = reply.children;
         addReplies(root.replies[index], queue, thread);
