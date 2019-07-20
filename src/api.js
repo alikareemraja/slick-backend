@@ -1,15 +1,15 @@
 "use strict";
 
-const express    = require("express");
+const express = require("express");
 const bodyParser = require("body-parser");
-const helmet     = require("helmet");
+const helmet = require("helmet");
 
 const middlewares = require("./middlewares");
-
-const auth  = require("./routes/auth");
+const search = require("./routes/search");
+const auth = require("./routes/auth");
 const item = require("./routes/item");
-const user = require("./routes/user")
-const comment = require("./routes/comment")
+const user = require("./routes/user");
+const comment = require("./routes/comment");
 
 const api = express();
 
@@ -21,9 +21,9 @@ api.use(middlewares.allowCrossDomain);
 
 // Basic route
 api.get("/", (req, res) => {
-    res.json({
-        name: "Slick Backend"
-    });
+  res.json({
+    name: "Slick Backend"
+  });
 });
 
 // API routes
@@ -31,5 +31,6 @@ api.use("/auth", auth);
 api.use("/items", item);
 api.use("/users", user);
 api.use("/comment", comment);
+api.use("/search", search);
 
 module.exports = api;

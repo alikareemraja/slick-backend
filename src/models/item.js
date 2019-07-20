@@ -13,14 +13,14 @@ const itemSchema = new mongoose.Schema({
   description: String,
   imageURL: String, // might require validation in db
   purchaseLink: String, // might require validation in db
-  isRecommended: Boolean,
+  //isRecommended: Boolean,
 
-  retailers : [
+  retailers: [
     {
-        name : String,
-        website : String,
-        price: String,
-    },
+      name: String,
+      website: String,
+      price: String
+    }
   ],
 
   reviews: [

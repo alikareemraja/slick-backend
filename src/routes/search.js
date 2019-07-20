@@ -7,7 +7,7 @@ const ItemController = require("../controllers/item");
 const StatisticsController = require("../controllers/statistics");
 
 router.get("/get", middlewares.checkAuthentication, SearchController.search);
-
+/*
 router.get(
   "/getd",
   middlewares.checkAuthentication,
@@ -29,5 +29,5 @@ router.delete(
   middlewares.checkAuthentication,
   StatisticsController.remove
 ); // Delete history by Id
-
+*/
 module.exports = router;
