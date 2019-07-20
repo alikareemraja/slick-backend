@@ -19,28 +19,25 @@ const create = (req, res) => {
     );
 };
 
+const read = (req, res) => {
+  ItemModel.findById(req.params.id)
+    .exec()
+    .then(item => {
+      if (!item)
+        return res.status(404).json({
+          error: "Not Found",
+          message: `Item not found`
+        });
 
-const read   = (req, res) => {
-  ItemModel.findById(req.params.id).exec()
-      .then(item => {
-
-          if (!item) return res.status(404).json({
-              error: 'Not Found',
-              message: `Item not found`
-          });
-
-          res.status(200).json(item)
-
+      res.status(200).json(item);
+    })
+    .catch(error =>
+      res.status(500).json({
+        error: "Internal Server Error",
+        message: error.message
       })
-      .catch(error => res.status(500).json({
-          error: 'Internal Server Error',
-          message: error.message
-      }));
-
+    );
 };
-
-
-
 
 const update = (req, res) => {
   if (Object.keys(req.body).length === 0) {
@@ -93,23 +90,31 @@ const list = (req, res) => {
 };
 
 const read_search = text => {
-  return ItemModel.find({ category: text })
-    .exec()
-    .then(item => {
-      if (!item) return null;
-      return item;
-    })
-    .catch(error =>
-      res.status(500).json({
-        error: "Internal Server Error",
-        message: error.message
+  // "line_text" : new RegExp(result)
+
+  // return ItemModel.find({ category: text })
+  // return ItemModel.find({ category: new RegExp(text, "i") })
+  return (
+    ItemModel.find({ category: new RegExp(text, "i") })
+      //return ItemModel.find({ category: /text/"i" })
+
+      .exec()
+      .then(item => {
+        if (!item) return null;
+        return item;
       })
-    );
+      .catch(error =>
+        res.status(500).json({
+          error: "Internal Server Error",
+          message: error.message
+        })
+      )
+  );
 };
 
 const get_recommended = text => {
   return ItemModel.aggregate([
-    { $match: { category: text } },
+    { $match: { category: new RegExp(text, "i") } },
     { $sample: { size: 3 } }
   ])
     .exec()
