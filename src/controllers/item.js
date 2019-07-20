@@ -19,25 +19,28 @@ const create = (req, res) => {
     );
 };
 
-const read = (req, res) => {
-  ItemModel.findById(req.params.id)
-    .exec()
-    .then(item => {
-      if (!item)
-        return res.status(404).json({
-          error: "Not Found",
-          message: `Item not found`
-        });
 
-      res.status(200).json(item);
-    })
-    .catch(error =>
-      res.status(500).json({
-        error: "Internal Server Error",
-        message: error.message
+const read   = (req, res) => {
+  ItemModel.findById(req.params.id).exec()
+      .then(item => {
+
+          if (!item) return res.status(404).json({
+              error: 'Not Found',
+              message: `Item not found`
+          });
+
+          res.status(200).json(item)
+
       })
-    );
+      .catch(error => res.status(500).json({
+          error: 'Internal Server Error',
+          message: error.message
+      }));
+
 };
+
+
+
 
 const update = (req, res) => {
   if (Object.keys(req.body).length === 0) {
