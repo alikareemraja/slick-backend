@@ -47,7 +47,7 @@ const update = (req, res) => {
     });
   }
 
-  MovieModel.findByIdAndUpdate(req.params.id, req.body, {
+  ItemModel.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true
   })
@@ -62,7 +62,7 @@ const update = (req, res) => {
 };
 
 const remove = (req, res) => {
-  MovieModel.findByIdAndRemove(req.params.id)
+  ItemModel.findByIdAndRemove(req.params.id)
     .exec()
     .then(() =>
       res
