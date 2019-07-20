@@ -23,11 +23,11 @@ router.post(
   middlewares.checkAuthentication,
   StatisticsController.create
 );
-
+/*
 router.delete(
   "/delete/:id",
   middlewares.checkAuthentication,
   StatisticsController.remove
 ); // Delete history by Id
-
+*/
 module.exports = router;
