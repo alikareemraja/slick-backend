@@ -19,13 +19,7 @@ const userSchema  = new mongoose.Schema({
         description: String,
         comments: [{ commenterId: { type: Number, required: true }, comment: { type: String, required: true } }]
     }],
-    wishlist: [{ 
-        itemId: { type: Number, required: true },
-        comments: [{ 
-            commenterId: { type: Number, required: true },
-            comment: { type: String, required: true } 
-        }]
-    }]
+    wishlist: [Schema.Types.ObjectId]
 });
 
 module.exports = mongoose.model('User', userSchema);

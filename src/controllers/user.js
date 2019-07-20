@@ -101,6 +101,15 @@ const getWishlistItems = (req, res) => {
 
 };
 
+const addWishlistItem = (req, res) => {
+    UserModel.findByIdAndUpdate( req.params.userId, { $push: {wishlist: req.params.itemId } } )
+    .then(item => res.status(200).json(item))
+    .catch(error => res.status(500).json({
+        error: 'Internal server error',
+        message: error.message
+    }));
+}
+
 const deleteWishlistItem = (req, res) => {
     UserModel.updateOne( {"_id": req.params.userId}, { $pull: {"wishlist.itemId": req.params.itemId } } )
     .then(item => res.status(200).json(item))
@@ -116,6 +125,7 @@ module.exports = {
     addOwnedItem,
     deleteOwnedItem,
     getWishlistItems,
+    addWishlistItem,
     updateOwnedItem,
     deleteWishlistItem
 };
