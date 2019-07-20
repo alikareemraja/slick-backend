@@ -25,7 +25,7 @@ router.put('/:uid/owned/:itemId', middlewares.checkAuthentication, UserControlle
 router.get('/:uid/wishlist', middlewares.checkAuthentication, UserController.getWishlistItems); // Read wishlist items
 
 // TODO: We need authorization too
-router.post('/:uid/wishlist', middlewares.checkAuthentication, UserController.addWishlistItem); // Add new wishlist item
+router.post('/:userId/wishlist/:itemId', middlewares.checkAuthentication, UserController.addWishlistItem); // Add new wishlist item
 
 // TODO: We need authorization too
 router.delete('/:userId/wishlist/:itemId', middlewares.checkAuthentication, UserController.deleteWishlistItem); // Delete an item in Wishlist
