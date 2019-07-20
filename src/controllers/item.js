@@ -19,27 +19,6 @@ const create = (req, res) => {
     );
 };
 
-const read_search = (req, res) => {
-  var text = req.query.input_text;
-  ItemModel.find({ input_text: text })
-    .exec()
-    .then(item => {
-      if (!item)
-        return res.status(404).json({
-          error: "Not Found",
-          message: `Item not found`
-        });
-
-      res.status(200).json(item);
-    })
-    .catch(error =>
-      res.status(500).json({
-        error: "Internal Server Error",
-        message: error.message
-      })
-    );
-};
-
 const read = (req, res) => {
   ItemModel.findById(req.params.id)
     .exec()
@@ -110,10 +89,71 @@ const list = (req, res) => {
     );
 };
 
+const read_search = text => {
+  return ItemModel.find({ category: text })
+    .exec()
+    .then(item => {
+      if (!item) return null;
+      return item;
+    })
+    .catch(error =>
+      res.status(500).json({
+        error: "Internal Server Error",
+        message: error.message
+      })
+    );
+};
+
+const get_recommended = text => {
+  return ItemModel.aggregate([
+    { $match: { category: text } },
+    { $sample: { size: 3 } }
+  ])
+    .exec()
+    .then(item => {
+      if (!item)
+        return res.status(404).json({
+          error: "Not Found",
+          message: `Item not found`
+        });
+      return item;
+      //res.status(200).json(item);
+    })
+    .catch(error =>
+      res.status(500).json({
+        error: "Internal Server Error",
+        message: error.message
+      })
+    );
+};
+
+const read_search_dup = (req, res) => {
+  var text = req.query.category;
+  ItemModel.find({ category: text })
+    .exec()
+    .then(item => {
+      if (!item)
+        return res.status(404).json({
+          error: "Not Found",
+          message: `Item not found`
+        });
+
+      res.status(200).json(item);
+    })
+    .catch(error =>
+      res.status(500).json({
+        error: "Internal Server Error",
+        message: error.message
+      })
+    );
+};
+
 module.exports = {
   create,
   read,
   read_search,
+  read_search_dup,
+  get_recommended,
   update,
   remove,
   list
