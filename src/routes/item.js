@@ -10,6 +10,7 @@ const ItemController = require('../controllers/item');
 //router.get('/', ItemController.list); // List all items
 router.post('/', middlewares.checkAuthentication, ItemController.create); // Add Item to wardrobe
 router.get('/:id', ItemController.read); // Read an Item by Id
+router.get('/rel/:id', ItemController.related);// Get related Items
 
 // TODO: We need authorization for updating too
 router.put('/:id', middlewares.checkAuthentication, ItemController.update); // Update an Item by Id
