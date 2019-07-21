@@ -107,7 +107,7 @@ const read_search = text => {
 const get_recommended = text => {
   return ItemModel.aggregate([
     { $match: { category: new RegExp(text, "i") } },
-    { $sample: { size: 3 } }
+    { $sample: { size: 2 } }
   ])
     .exec()
     .then(item => {

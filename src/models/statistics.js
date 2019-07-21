@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
-const StatisticsSchema = new mongoose.Schema({
+const statisticSchema = new mongoose.Schema({
   searchItem: String,
   Date: String
 });
 
-module.exports = mongoose.model("Statistics", StatisticsSchema);
+module.exports = mongoose.model("Statistic", statisticSchema);
