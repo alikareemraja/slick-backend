@@ -136,6 +136,18 @@ const deleteWishlistItem = (req, res) => {
         }));
 };
 
+const getFriends = (req, res) => {
+    UserModel.find({_id: { $nin: [req.params.uid] } }).select("name imageURL").exec()
+        .then(friends => {
+            res.status(200).json(friends)
+        })
+        .catch(error => res.status(500).json({
+            error: "Internal Server Error",
+            message: error.message
+        }));
+
+};
+
 module.exports = {
     getOwnedItems,
     getOwnedItem,
@@ -144,5 +156,6 @@ module.exports = {
     getWishlistItems,
     addWishlistItem,
     updateOwnedItem,
-    deleteWishlistItem
+    deleteWishlistItem,
+    getFriends
 };

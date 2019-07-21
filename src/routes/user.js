@@ -22,6 +22,9 @@ router.delete('/:uid/owned/:itemId', middlewares.checkAuthentication, UserContro
 router.put('/:uid/owned/:itemId', middlewares.checkAuthentication, UserController.updateOwnedItem); // Update an item in Owned Items
 
 // TODO: We need authorization too
+router.get('/:uid/friends', middlewares.checkAuthentication, UserController.getFriends); // Get friends
+
+// TODO: We need authorization too
 router.get('/:uid/wishlist', middlewares.checkAuthentication, UserController.getWishlistItems); // Read wishlist items
 
 // TODO: We need authorization too
