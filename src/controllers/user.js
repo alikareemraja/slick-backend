@@ -44,12 +44,12 @@ const getOwnedItem = (req, res) => {
 };
 
 const addOwnedItem = (req, res) => {
-    UserModel.findByIdAndUpdate( req.params.uid, { $push: {ownedItems: req.body } } )
-    .then(item => res.status(200).json(item))
-    .catch(error => res.status(500).json({
-        error: 'Internal server error',
-        message: error.message
-    }));
+          UserModel.findByIdAndUpdate( req.params.uid, { $push: {ownedItems: req.body } } )
+          .then(item => res.status(200).json(item))
+          .catch(error => res.status(500).json({
+              error: 'Internal server error',
+              message: error.message
+          }));
 }
 
 const deleteOwnedItem = (req, res) => {
@@ -102,7 +102,15 @@ const getWishlistItems = (req, res) => {
 };
 
 const addWishlistItem = (req, res) => {
-    UserModel.findByIdAndUpdate( req.params.userId, { $push: {wishlist: req.params.itemId } } )
+    if (Object.keys(req.body).length === 0)
+    {
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body is empty'
+        });
+    }
+    
+    UserModel.findByIdAndUpdate( req.params.userId, { $push: {wishlist: mongoose.Types.ObjectId(req.body.itemId) } } )
     .then(item => res.status(200).json(item))
     .catch(error => res.status(500).json({
         error: 'Internal server error',
@@ -111,7 +119,7 @@ const addWishlistItem = (req, res) => {
 }
 
 const deleteWishlistItem = (req, res) => {
-    UserModel.updateOne( {"_id": req.params.userId}, { $pull: {"wishlist.itemId": req.params.itemId } } )
+    UserModel.updateOne( {"_id": req.params.userId}, { $pull: {"wishlist": req.params.itemId } } )
     .then(item => res.status(200).json(item))
         .catch(error => res.status(500).json({
             error: 'Internal server error',
