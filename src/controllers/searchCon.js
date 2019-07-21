@@ -2,22 +2,11 @@
 const ItemController = require("./item");
 const ItemModel = require("../models/item");
 
-const test = (req, res) => {
-  let t = "CREATE";
-  var obj = JSON.parse('{ "name":"John", "age":30, "city":"New York"}');
-  // Objdata = JSON.parse(t);
-  // x = JSON.parse(t);
-  //var x = JSON.stringify(t);
-  var x = { t };
-  return "FMT";
-  //res.status(200).json(obj);
-};
-
 const search = (req, res) => {
   var text = req.query.category;
   ItemController.read_search(text).then(result => {
     for (var index = 0; index < result.length; index++) {
-      result[index].isRecommended = false;
+      result[index].isRecommendedd = false;
     }
     continue_search(result, text).then(final => {
       return res.status(200).json(final);
@@ -33,11 +22,15 @@ const continue_search = (result, text) => {
     result = result.concat(recommendedResults);
     return result;
     //return result.status(200).json(result);
+    /*    var mySet = new Set(result);
+    var filteredrecommendedResults = Array.from(mySet);
+    // filteredrecommendedResults.sort(); // [1,2,3,4,5,6,7]
+
+    return filteredrecommendedResults;*/
   });
 };
 
 module.exports = {
   search,
-  test,
   continue_search
 };
