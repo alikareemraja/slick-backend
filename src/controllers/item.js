@@ -1,6 +1,9 @@
 "use strict";
 
 const ItemModel = require("../models/item");
+var multer  =   require('multer');
+var fs = require('fs');
+var path = require("path");
 
 const create = (req, res) => {
   if (Object.keys(req.body).length === 0)
@@ -181,6 +184,33 @@ const related = (req, res) => {
   }));
 };
 
+var storage =   multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, path.join(__dirname, '/uploads/'));
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now());
+  }
+});
+var upload = multer({ storage : storage}).single('file');
+
+
+
+const uploadPhoto = (req,res) =>
+{
+  upload(req,res,function(err) {
+      if(err) {
+          return res.end("Error uploading file.");
+      }
+      res.end("File is uploaded");
+  });
+}
+
+const getFile = (req,res) => {
+  res.sendFile(__dirname +'/uploads' + "/file-1563734809055");
+};
+
+
 
 module.exports = {
   create,
@@ -191,5 +221,7 @@ module.exports = {
   update,
   remove,
   related,
-  list
+  list,
+  getFile,
+  uploadPhoto
 };
