@@ -90,26 +90,18 @@ const list = (req, res) => {
 };
 
 const read_search = text => {
-  // "line_text" : new RegExp(result)
-
-  // return ItemModel.find({ category: text })
-  // return ItemModel.find({ category: new RegExp(text, "i") })
-  return (
-    ItemModel.find({ category: new RegExp(text, "i") })
-      //return ItemModel.find({ category: /text/"i" })
-
-      .exec()
-      .then(item => {
-        if (!item) return null;
-        return item;
+  return ItemModel.find({ category: new RegExp(text, "i") })
+    .exec()
+    .then(item => {
+      if (!item) return null;
+      return item;
+    })
+    .catch(error =>
+      res.status(500).json({
+        error: "Internal Server Error",
+        message: error.message
       })
-      .catch(error =>
-        res.status(500).json({
-          error: "Internal Server Error",
-          message: error.message
-        })
-      )
-  );
+    );
 };
 
 const get_recommended = text => {

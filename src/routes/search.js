@@ -23,11 +23,11 @@ router.post(
   middlewares.checkAuthentication,
   StatisticsController.create
 );
+
+router.post("/create", middlewares.checkAuthentication, ItemController.create); // Add Item to wardrobe // Delete history by Id
 /*
 router.delete(
   "/delete/:id",
   middlewares.checkAuthentication,
   StatisticsController.remove
-); // Delete history by Id
-*/
-module.exports = router;
+);*/ module.exports = router;

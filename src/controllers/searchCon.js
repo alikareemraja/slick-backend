@@ -1,15 +1,6 @@
 "use strict";
 const ItemController = require("./item");
 const ItemModel = require("../models/item");
-/*
-const search = (req, res) => {
-  var text = req.query.category;
-  ItemController.read_search(text).then(result =>
-    continue_search(result, text).then(final => {
-      return res.status(200).json(final);
-    })
-  );
-};*/
 
 const search = (req, res) => {
   var text = req.query.category;
@@ -31,6 +22,11 @@ const continue_search = (result, text) => {
     result = result.concat(recommendedResults);
     return result;
     //return result.status(200).json(result);
+    /*    var mySet = new Set(result);
+    var filteredrecommendedResults = Array.from(mySet);
+    // filteredrecommendedResults.sort(); // [1,2,3,4,5,6,7]
+
+    return filteredrecommendedResults;*/
   });
 };
 
