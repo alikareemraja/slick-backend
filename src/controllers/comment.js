@@ -48,6 +48,9 @@ const replyToComment = (req, res) => {
 
 }
 
+
+
+
 const getComment = (req, res) => {
 
     var itemId = req.params["itemId"];
@@ -82,14 +85,27 @@ const getComment = (req, res) => {
         }));
 }
 
-const getUserDetails = (userId) => {
+const getUserDetails = (req, res) => {
+
+    var userId = req.params["userId"];
+
+    if (userId === undefined)
+        res.status(500).json({
+            err: 'Internal server error',
+            message: "No comment Id provided"
+        });
+
     return UserModel.findOne({ "_id": userId }).exec()
         .then(user => {
 
+            res.status(200).json(user)
             return user;
 
         })
-        .catch(error => { return null });
+        .catch(err => res.status(500).json({
+            err: 'Internal server error',
+            message: err.message
+        }));
 }
 
 const parseCommentTree = (thread) => {
@@ -187,5 +203,6 @@ module.exports = {
     addCommentOnItem,
     getComment,
     updateComment,
-    removeComment
+    removeComment,
+    getUserDetails
 };
