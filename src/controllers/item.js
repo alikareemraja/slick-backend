@@ -148,6 +148,40 @@ const read_search_dup = (req, res) => {
     );
 };
 
+const related = (req, res) => {
+  ItemModel.findById(req.params.id).exec()
+  .then(item => {
+    ItemModel.aggregate([
+      { $match: { category: item.category } },
+      { $sample: { size: 3 } }
+    ])
+      .exec()
+      .then(recommendedResults => {
+        /*var i = 0;
+        var results;
+        for (var index = 0; index < recommendedResults.length; index++) {
+          if(recommendedResults[index].id != req.params.id && i < 2)
+          result[i] = recommendedResults[index];
+          i++;
+        }*/
+        //return result;
+      
+        res.status(200).json(recommendedResults);
+      })
+      .catch(error =>
+        res.status(500).json({
+          error: "Internal Server Error",
+          message: error.message
+        })
+      );
+  })
+  .catch(error => res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message
+  }));
+};
+
+
 module.exports = {
   create,
   read,
@@ -156,5 +190,6 @@ module.exports = {
   get_recommended,
   update,
   remove,
+  related,
   list
 };
