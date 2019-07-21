@@ -189,7 +189,7 @@ var storage =   multer.diskStorage({
     callback(null, path.join(__dirname, '/uploads/'));
   },
   filename: function (req, file, callback) {
-    callback(null, file.fieldname + '-' + Date.now());
+    callback(null, file.fieldname + '-' + req.params["itemId"]);
   }
 });
 var upload = multer({ storage : storage}).single('file');
@@ -198,6 +198,14 @@ var upload = multer({ storage : storage}).single('file');
 
 const uploadPhoto = (req,res) =>
 {
+  var itemId = req.params["itemId"];
+
+    if (itemId === undefined)
+        res.status(500).json({
+            err: 'Internal server error',
+            message: "No comment Id provided"
+        });
+
   upload(req,res,function(err) {
       if(err) {
           return res.end("Error uploading file.");
@@ -207,7 +215,14 @@ const uploadPhoto = (req,res) =>
 }
 
 const getFile = (req,res) => {
-  res.sendFile(__dirname +'/uploads' + "/file-1563734809055");
+  var itemId = req.params["itemId"];
+
+    if (itemId === undefined)
+        res.status(500).json({
+            err: 'Internal server error',
+            message: "No comment Id provided"
+        });
+  res.sendFile(__dirname +'/uploads' + "/file-"+itemId);
 };
 
 
