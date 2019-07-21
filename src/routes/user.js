@@ -1,11 +1,13 @@
 "use strict";
 
-const express  = require('express');
-const router   = express.Router();
+const express = require('express');
+const router = express.Router();
 
-const middlewares    = require('../middlewares');
+const middlewares = require('../middlewares');
 const UserController = require('../controllers/user');
 
+// TODO: We need authorization too
+router.get('/:uid', middlewares.checkAuthentication, UserController.getUserInfo); // Get user's name and pic
 // TODO: We need authorization too
 router.get('/:uid/owned', middlewares.checkAuthentication, UserController.getOwnedItems); // Read owned items
 

@@ -137,9 +137,21 @@ const deleteWishlistItem = (req, res) => {
 };
 
 const getFriends = (req, res) => {
-    UserModel.find({_id: { $nin: [req.params.uid] } }).select("name imageURL").exec()
+    UserModel.find({ _id: { $nin: [req.params.uid] } }).select("name imageURL").exec()
         .then(friends => {
             res.status(200).json(friends)
+        })
+        .catch(error => res.status(500).json({
+            error: "Internal Server Error",
+            message: error.message
+        }));
+
+};
+
+const getUserInfo = (req, res) => {
+    UserModel.find({ _id: req.params.uid }).select("name imageURL").exec()
+        .then(user => {
+            res.status(200).json(user)
         })
         .catch(error => res.status(500).json({
             error: "Internal Server Error",
@@ -157,5 +169,6 @@ module.exports = {
     addWishlistItem,
     updateOwnedItem,
     deleteWishlistItem,
-    getFriends
+    getFriends,
+    getUserInfo
 };

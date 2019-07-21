@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-const userSchema  = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true
@@ -12,14 +12,16 @@ const userSchema  = new mongoose.Schema({
         required: true,
         unique: true
     },
-    ownedItems: [{ 
+    ownedItems: [{
         //itemId: { type: Number, required: true },
         imageURL: { type: String, required: true },
         title: { type: String, required: true },
         description: String,
         comments: [{ commenterId: { type: Number, required: true }, comment: { type: String, required: true } }]
     }],
-    wishlist: [mongoose.Schema.Types.ObjectId]
+    wishlist: [mongoose.Schema.Types.ObjectId],
+    name: String,
+    imageURL: String
 });
 
 module.exports = mongoose.model('User', userSchema);
