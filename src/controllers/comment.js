@@ -34,6 +34,29 @@ const addCommentOnItem = (req, res) => {
         }));
 }
 
+const vote = (req, res) => {
+
+    var commentId = req.params["commentId"];
+    var vote = req.params["vote"];
+
+    if (commentId === undefined || vote === undefined)
+        res.status(500).json({
+            err: 'Internal server error',
+            message: "No comment Id provided"
+        });
+
+    CommentModel.updateOne({ "_id": commentId }, { $set: { "votes": vote } }, {
+        new: true,
+        runValidators: true
+    }).exec()
+        .then(item => res.status(200).json(item))
+        .catch(error => res.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+        }));
+
+}
+
 const updateParent = (parentId, child) => {
 
     CommentModel.findByIdAndUpdate(parentId, { $push: { children: child._id } }, {
@@ -117,6 +140,7 @@ const parseCommentTree = (thread) => {
         "user": thread.user,
         "date": thread.date,
         "text": thread.text,
+        "votes": thread.votes
     };
 
     commentTree.push(comment);
@@ -204,5 +228,6 @@ module.exports = {
     getComment,
     updateComment,
     removeComment,
-    getUserDetails
+    getUserDetails,
+    vote
 };
