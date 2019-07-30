@@ -19,8 +19,9 @@ const continue_search = (result, text) => {
     for (var index = 0; index < recommendedResults.length; index++) {
       recommendedResults[index].isRecommended = true;
     }
-    result = result.concat(recommendedResults);
-    return result;
+    recommendedResults = recommendedResults.concat(result);
+    //result = result.concat(recommendedResults);
+    return recommendedResults;
     //return result.status(200).json(result);
     /*    var mySet = new Set(result);
     var filteredrecommendedResults = Array.from(mySet);
